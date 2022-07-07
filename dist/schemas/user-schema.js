@@ -23,6 +23,7 @@ const userSchema = new mongoose_1.Schema({
     role: {
         type: String,
         required: true,
+        default: "user",
         enum: ["admin", "user"],
     },
     createdAt: {
@@ -34,6 +35,11 @@ const userSchema = new mongoose_1.Schema({
         type: Date,
         required: true,
         default: Date.now,
+    },
+    termsAccepted: {
+        type: Boolean,
+        required: true,
+        default: false,
     },
 });
 exports.userSchema = userSchema;

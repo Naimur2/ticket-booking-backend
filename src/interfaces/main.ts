@@ -6,4 +6,10 @@ export interface UserProps {
     role: "admin" | "user";
     createdAt?: Date;
     updatedAt?: Date;
+    termsAccepted?: boolean;
+}
+
+export interface ITokenData {
+    _id: string;
+    email: string;
 }

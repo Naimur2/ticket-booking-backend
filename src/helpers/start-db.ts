@@ -5,7 +5,7 @@ dotenv.config();
 const { env } = process;
 
 export const run = async (): Promise<void> => {
-    const DB_URL = (env.MONGO_URI as string) + env.MONGO_DB;
+    const DB_URL = env.MONGO_URI as string;
 
     try {
         await connect(DB_URL);

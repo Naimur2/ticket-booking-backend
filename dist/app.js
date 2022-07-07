@@ -13,7 +13,6 @@ dotenv_1.default.config();
 const { env } = process;
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, cors_1.default)());
 app.use(express_1.default.static("public"));
 // STARTING OUR DATATABASE
 (0, helpers_1.run)();
@@ -25,7 +24,8 @@ const errorHandler = (err, req, res, next) => {
         message: err.message,
     });
 };
-app.use("/", routes_1.default);
+app.use((0, cors_1.default)());
+app.use("/api", routes_1.default);
 const port = env.PORT || 4000;
 app.listen(port, () => {
     console.log("Server is running at: http://localhost:" + port);

@@ -22,6 +22,7 @@ const userSchema = new Schema<UserProps>({
     role: {
         type: String,
         required: true,
+        default: "user",
         enum: ["admin", "user"],
     },
     createdAt: {
@@ -33,6 +34,11 @@ const userSchema = new Schema<UserProps>({
         type: Date,
         required: true,
         default: Date.now,
+    },
+    termsAccepted: {
+        type: Boolean,
+        required: true,
+        default: false,
     },
 });
 

@@ -12,7 +12,6 @@ const { env } = process;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors());
 app.use(express.static("public"));
 
 // STARTING OUR DATATABASE
@@ -27,7 +26,9 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     });
 };
 
-app.use("/", router);
+app.use(cors());
+
+app.use("/api", router);
 
 const port: string | number = (env.PORT as string) || 4000;
 
