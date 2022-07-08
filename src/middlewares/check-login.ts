@@ -17,8 +17,8 @@ const checkLogin: RequestHandler = (
             const token = authorization.split(" ")[1];
             const decoded = jwt.verify(token, env.JWT_SECRET as string);
             const { _id, email } = decoded as ITokenData;
-            req.body.email = email;
-            req.body._id = _id;
+            req.body.user = { _id, email };
+
             next();
         } catch (error) {
             res.status(401).json({

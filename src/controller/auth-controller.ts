@@ -2,7 +2,7 @@ import { compare, hash } from "bcrypt";
 import dotenv from "dotenv";
 import { RequestHandler } from "express";
 import { sign } from "jsonwebtoken";
-import { ITokenData, UserProps } from "../interfaces/main";
+import { ITokenData, IUserProps } from "../interfaces/main";
 import User from "../schemas/user-schema";
 
 dotenv.config();
@@ -51,7 +51,7 @@ export const loginController: RequestHandler = async (req, res) => {
 
 export const registerController: RequestHandler = async (req, res) => {
     const { email, password, role, firstName, lastName, termsAccepted } =
-        req.body as UserProps;
+        req.body as IUserProps;
 
     const user = await User.find({ email }).select({ password: 0 });
 
@@ -96,7 +96,8 @@ export const registerController: RequestHandler = async (req, res) => {
 };
 
 export const validationController: RequestHandler = async (req, res) => {
-    const { email, _id }: ITokenData = req.body;
+    const { email, _id }: ITokenData = req.body.user;
+    console.log(email, _id);
     const user = await User.find({ email, _id }).select({ password: 0 });
     if (user?.length > 0) {
         res.status(200).json({

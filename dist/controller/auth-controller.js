@@ -90,7 +90,8 @@ const registerController = (req, res) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.registerController = registerController;
 const validationController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, _id } = req.body;
+    const { email, _id } = req.body.user;
+    console.log(email, _id);
     const user = yield user_schema_1.default.find({ email, _id }).select({ password: 0 });
     if ((user === null || user === void 0 ? void 0 : user.length) > 0) {
         res.status(200).json({

@@ -14,8 +14,7 @@ const checkLogin = (req, res, next) => {
             const token = authorization.split(" ")[1];
             const decoded = jsonwebtoken_1.default.verify(token, env.JWT_SECRET);
             const { _id, email } = decoded;
-            req.body.email = email;
-            req.body._id = _id;
+            req.body.user = { _id, email };
             next();
         }
         catch (error) {

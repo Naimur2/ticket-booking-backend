@@ -1,4 +1,4 @@
-export interface UserProps {
+export interface IUserProps {
     firstName?: string;
     lastName?: string;
     email: string;
@@ -12,4 +12,15 @@ export interface UserProps {
 export interface ITokenData {
     _id: string;
     email: string;
+}
+
+export interface IAddLocationProps {
+    name: string;
+    address: string;
+    phone: string;
+    email: string;
+    description: string;
+    image?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

@@ -1,7 +1,7 @@
-import { Schema, model } from "mongoose";
-import { UserProps } from "../interfaces/main";
+import { model, Schema } from "mongoose";
+import { IUserProps } from "../interfaces/main";
 
-const userSchema = new Schema<UserProps>({
+const userSchema = new Schema<IUserProps>({
     firstName: {
         type: String,
         required: false,
@@ -42,7 +42,7 @@ const userSchema = new Schema<UserProps>({
     },
 });
 
-const User = model<UserProps>("User", userSchema);
+const User = model<IUserProps>("User", userSchema);
 
 export default User;
 
