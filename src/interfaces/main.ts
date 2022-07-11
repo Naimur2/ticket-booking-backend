@@ -1,11 +1,14 @@
-export interface IUserProps {
+export interface ITrackTime {
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface IUserProps extends ITrackTime {
     firstName?: string;
     lastName?: string;
     email: string;
     password: string;
     role: "admin" | "user";
-    createdAt?: Date;
-    updatedAt?: Date;
     termsAccepted?: boolean;
 }
 
@@ -14,13 +17,20 @@ export interface ITokenData {
     email: string;
 }
 
-export interface IAddLocationProps {
+export interface IAddLocationProps extends ITrackTime {
     name: string;
     address: string;
     phone: string;
     email: string;
     description: string;
     image?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+}
+
+export interface IBus extends ITrackTime {
+    busName: string;
+    busNumber: string;
+    busType: string;
+    busDescription: string;
+    busImage: string;
+    seatNumber: number;
 }
