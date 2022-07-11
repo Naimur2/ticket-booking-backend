@@ -9,6 +9,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const helpers_1 = require("./helpers");
 const routes_1 = __importDefault(require("./routes"));
+const error_handler_1 = require("./middlewares/error-handler");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const { env } = process;
@@ -19,16 +20,10 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.static("public"));
 // STARTING OUR DATATABASE
 (0, helpers_1.run)();
-const errorHandler = (err, req, res, next) => {
-    if (err.headerSent) {
-        return next(err);
-    }
-    res.status(500).json({
-        message: err.message,
-    });
-};
 app.use("/api", routes_1.default);
 const port = env.PORT || 4000;
+app.use(error_handler_1.notfoundandler);
+app.use(error_handler_1.errorHandler);
 app.listen(port, () => {
     console.log("Server is running at: http://localhost:" + port + "/api");
 });
