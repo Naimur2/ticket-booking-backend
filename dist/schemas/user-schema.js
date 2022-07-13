@@ -26,21 +26,8 @@ const userSchema = new mongoose_1.Schema({
         default: "user",
         enum: ["admin", "user"],
     },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
-    termsAccepted: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
+}, {
+    timestamps: true,
 });
 exports.userSchema = userSchema;
 const User = (0, mongoose_1.model)("User", userSchema);

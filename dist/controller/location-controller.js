@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteLocation = exports.updateLocation = exports.createLocation = exports.getLocationById = exports.getAllLocation = void 0;
-const locatio_schema_1 = __importDefault(require("../schemas/locatio-schema"));
+const location_schema_1 = __importDefault(require("../schemas/location-schema"));
 const getAllLocation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const locations = yield locatio_schema_1.default.find();
+        const locations = yield location_schema_1.default.find();
         res.status(200).json({
             message: "Success",
             locations,
@@ -29,7 +29,7 @@ const getAllLocation = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.getAllLocation = getAllLocation;
 const getLocationById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const location = yield locatio_schema_1.default.findById(req.params.id);
+        const location = yield location_schema_1.default.findById(req.params.id);
         res.status(200).json({
             message: "Success",
             location,
@@ -50,7 +50,7 @@ const createLocation = (req, res) => __awaiter(void 0, void 0, void 0, function*
             email: data.email,
             description: data.description,
         };
-        const location = new locatio_schema_1.default(newData);
+        const location = new location_schema_1.default(newData);
         yield location.save();
         res.status(201).json({
             message: "Success",
@@ -64,7 +64,7 @@ const createLocation = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.createLocation = createLocation;
 const updateLocation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const location = yield locatio_schema_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const location = yield location_schema_1.default.findByIdAndUpdate(req.params.id, Object.assign({}, req.body), { new: true });
         res.status(200).json({
             message: "Success",
             location,
@@ -77,7 +77,7 @@ const updateLocation = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.updateLocation = updateLocation;
 const deleteLocation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield locatio_schema_1.default.findByIdAndDelete(req.params.id);
+        yield location_schema_1.default.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: "Location deleted" });
     }
     catch (error) {

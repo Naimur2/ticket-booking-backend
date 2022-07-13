@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Location from "../schemas/locatio-schema";
-import { IAddLocationProps } from "../interfaces/main";
+import { ILocation } from "../interfaces/main";
+import Location from "../schemas/location-schema";
 
 export const getAllLocation = async (req: Request, res: Response) => {
     try {
@@ -28,7 +28,7 @@ export const getLocationById = async (req: Request, res: Response) => {
 
 export const createLocation = async (req: Request, res: Response) => {
     try {
-        const data: IAddLocationProps = req.body;
+        const data: ILocation = req.body;
 
         const newData = {
             name: data.name,
@@ -54,7 +54,7 @@ export const updateLocation = async (req: Request, res: Response) => {
     try {
         const location = await Location.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            { ...req.body },
             { new: true }
         );
         res.status(200).json({

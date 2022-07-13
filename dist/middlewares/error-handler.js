@@ -10,11 +10,15 @@ const notfoundandler = (req, res, next) => {
 };
 exports.notfoundandler = notfoundandler;
 const errorHandler = (err, req, res, next) => {
-    if (err === null || err === void 0 ? void 0 : err.headerSent) {
-        return next(err);
+    if (res.headersSent) {
+        next("Something went wrong");
     }
-    res.status(500).json({
-        message: err.message,
-    });
+    else {
+        res.status(err.status || 500);
+        res.json({
+            message: (err === null || err === void 0 ? void 0 : err.message) || "Something went wrong",
+            error: err,
+        });
+    }
 };
 exports.errorHandler = errorHandler;

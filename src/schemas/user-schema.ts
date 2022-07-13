@@ -1,46 +1,36 @@
 import { model, Schema } from "mongoose";
 import { IUserProps } from "../interfaces/main";
 
-const userSchema = new Schema<IUserProps>({
-    firstName: {
-        type: String,
-        required: false,
+const userSchema = new Schema<IUserProps>(
+    {
+        firstName: {
+            type: String,
+            required: false,
+        },
+        lastName: {
+            type: String,
+            required: false,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        role: {
+            type: String,
+            required: true,
+            default: "user",
+            enum: ["admin", "user"],
+        },
     },
-    lastName: {
-        type: String,
-        required: false,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    role: {
-        type: String,
-        required: true,
-        default: "user",
-        enum: ["admin", "user"],
-    },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
-    termsAccepted: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
-});
+    {
+        timestamps: true,
+    }
+);
 
 const User = model<IUserProps>("User", userSchema);
 

@@ -7,7 +7,7 @@ const busSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    busNumber: {
+    busLiscenseNumber: {
         type: String,
         required: true,
     },
@@ -25,20 +25,10 @@ const busSchema = new mongoose_1.Schema({
         required: true,
     },
     seatNumber: {
-        type: Number,
+        type: String,
         required: true,
     },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        required: true,
-        default: Date.now,
-    },
-});
+}, { timestamps: true });
 exports.busSchema = busSchema;
 const Bus = (0, mongoose_1.model)("Bus", busSchema);
 exports.default = Bus;

@@ -1,10 +1,13 @@
 import dotenv from "dotenv";
-import express, { ErrorRequestHandler, Express } from "express";
+import express, { Express } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import { run } from "./helpers";
+import { errorHandler, notfoundandler } from "./middlewares/error-handler";
 import router from "./routes";
-import { notfoundandler, errorHandler } from "./middlewares/error-handler";
+import path from "path";
+
+const static_path = path.join(__dirname, "./public");
 
 const app: Express = express();
 dotenv.config();
@@ -15,7 +18,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static(static_path));
 
 // STARTING OUR DATATABASE
 

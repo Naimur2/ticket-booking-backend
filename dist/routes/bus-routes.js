@@ -11,6 +11,6 @@ const route = (0, express_1.Router)();
 route.get("/", check_login_1.default, bus_controller_1.getAllBuses);
 route.get("/:id", check_login_1.default, bus_controller_1.getBusById);
 route.post("/", check_login_1.default, upload_bus_Image_1.uploadBusImage, bus_controller_1.addBus);
-route.put("/:id", check_login_1.default, bus_controller_1.updateBus);
+route.put("/:id", check_login_1.default, upload_bus_Image_1.uploadBusImage, bus_controller_1.updateBus);
 route.delete("/:id", check_login_1.default, bus_controller_1.deleteBus);
 exports.default = route;

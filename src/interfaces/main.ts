@@ -1,9 +1,4 @@
-export interface ITrackTime {
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
-export interface IUserProps extends ITrackTime {
+export interface IUserProps {
     firstName?: string;
     lastName?: string;
     email: string;
@@ -17,7 +12,7 @@ export interface ITokenData {
     email: string;
 }
 
-export interface IAddLocationProps extends ITrackTime {
+export interface ILocation {
     name: string;
     address: string;
     phone: string;
@@ -26,11 +21,20 @@ export interface IAddLocationProps extends ITrackTime {
     image?: string;
 }
 
-export interface IBus extends ITrackTime {
+export interface IBus {
+    _id?: string;
     busName: string;
-    busNumber: string;
-    busType: string;
+    busLiscenseNumber: string;
+    busType: "AC" | "Non-AC";
     busDescription: string;
-    busImage: string;
-    seatNumber: number;
+    busImage?: string;
+    seatNumber: string;
+}
+
+export interface ICoach {
+    _id?: string;
+    startingPoint: ILocation;
+    destination: ILocation;
+    bus: IBus;
+    startingTime: string;
 }
