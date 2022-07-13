@@ -33,8 +33,8 @@ export interface IBus {
 
 export interface ICoach {
     _id?: string;
-    startingPoint: ILocation;
-    destination: ILocation;
-    bus: IBus;
+    startingPoint: ILocation | string;
+    destination: ILocation | string;
+    bus: IBus | string;
     startingTime: string;
 }
