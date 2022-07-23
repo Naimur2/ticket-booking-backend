@@ -17,8 +17,6 @@ const schema = new Schema<ILocation>(
         },
         email: {
             type: String,
-            required: false,
-            unique: true,
         },
         description: {
             type: String,

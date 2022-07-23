@@ -19,6 +19,30 @@ const CoachesSchema = new Schema<ICoach>(
             type: String,
             required: true,
         },
+        price: {
+            type: String,
+            required: true,
+        },
+        date: {
+            type: Date,
+        },
+        seats: [
+            {
+                seatNumber: {
+                    type: String,
+                    required: true,
+                },
+                seatStatus: {
+                    type: Boolean,
+                    required: true,
+                    default: false,
+                },
+                user: {
+                    type: Types.ObjectId,
+                    ref: "User",
+                },
+            },
+        ],
     },
     { timestamps: true }
 );

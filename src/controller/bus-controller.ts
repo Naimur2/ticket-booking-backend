@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import Bus from "../schemas/bus-schema";
-import { IBus } from "../interfaces/main";
+import { IBus, ISeat } from "../interfaces/main";
 import path from "path";
 import { unlink } from "fs";
+import Coach from "../schemas/coaches-schema";
+import { getSeats } from "../helpers/get-bus-seats";
 
 // add a bus
 export const addBus = async (req: Request, res: Response) => {
@@ -100,7 +102,27 @@ export const updateBus = async (req: Request, res: Response) => {
             newBusImage = "/uploads/bus-images/" + files[0].filename;
         }
 
-        const bus = await Bus.findByIdAndUpdate(req.params.id, {
+        const busId = req.params.id;
+
+        const oldBus = await Bus.findById(busId);
+        const oldSeatNumber = oldBus?.seatNumber as any;
+        const newSeatNumber = seatNumber as any;
+
+        if (oldSeatNumber !== newSeatNumber) {
+            const seats = getSeats(newSeatNumber, 4).map((seat) => {
+                return {
+                    seatNumber: seat,
+                };
+            }) as ISeat[];
+
+            const coachesWithSameBus = await Coach.find({ bus: busId });
+            coachesWithSameBus.forEach((coach) => {
+                coach.seats = seats;
+                coach.save();
+            });
+        }
+
+        const bus = await Bus.findByIdAndUpdate(busId, {
             busName,
             busLiscenseNumber,
             busType,
@@ -114,6 +136,7 @@ export const updateBus = async (req: Request, res: Response) => {
             data: bus,
         });
     } catch (error: any) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };

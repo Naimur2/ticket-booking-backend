@@ -10,8 +10,8 @@ import checkLogin from "../middlewares/check-login";
 
 const router = Router();
 
-router.get("/", checkLogin, getAllLocation);
-router.get("/:id", checkLogin, getLocationById);
+router.get("/", getAllLocation);
+router.get("/:id", getLocationById);
 router.post("/", checkLogin, createLocation);
 router.put("/:id", checkLogin, updateLocation);
 router.delete("/:id", checkLogin, deleteLocation);

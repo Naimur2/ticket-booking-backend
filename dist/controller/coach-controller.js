@@ -12,24 +12,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCoach = exports.updateCoach = exports.getCoachById = exports.getAllCoaches = exports.addCoach = void 0;
+exports.searchCoach = exports.deleteCoach = exports.updateCoach = exports.getCoachById = exports.getAllCoaches = exports.addCoach = void 0;
 const coaches_schema_1 = __importDefault(require("../schemas/coaches-schema"));
+const get_bus_seats_1 = require("../helpers/get-bus-seats");
+const bus_schema_1 = __importDefault(require("../schemas/bus-schema"));
 // add a coach
 const addCoach = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { startingPoint, destination, bus, startingTime } = req.body;
+        const { startingPoint, destination, bus, startingTime, price, date } = req.body;
+        const busDetails = yield bus_schema_1.default.findById(bus);
+        const seatNo = busDetails === null || busDetails === void 0 ? void 0 : busDetails.seatNumber;
+        const seats = (0, get_bus_seats_1.getSeats)(seatNo, 4).map((seat) => {
+            return {
+                seatNumber: seat,
+            };
+        });
         const coach = new coaches_schema_1.default({
             startingPoint,
             destination,
             bus,
             startingTime,
+            price,
+            date,
+            seats,
         });
         yield coach.save();
         res.status(201).json({
             message: "Coach added successfully",
+            // data: coach,
         });
     }
     catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 });
@@ -75,7 +89,7 @@ const updateCoach = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const updatedCoach = yield coaches_schema_1.default.findById(req.params.id).populate("startingPoint destination bus");
         res.status(200).json({
             message: "Coach updated successfully",
-            data: exports.updateCoach,
+            data: updatedCoach,
         });
     }
     catch (error) {
@@ -96,3 +110,31 @@ const deleteCoach = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.deleteCoach = deleteCoach;
+// delete a coach
+const searchCoach = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { startingPoint, destination, date } = req.body;
+        console.log(startingPoint, destination, date);
+        const data = yield coaches_schema_1.default.find({
+            startingPoint,
+            destination,
+            date: date,
+        }).populate("startingPoint destination bus");
+        if (data.length === 0) {
+            res.status(200).json({
+                message: "No coaches found",
+                data: data,
+            });
+        }
+        else {
+            res.status(200).json({
+                message: "Success",
+                data: data,
+            });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+exports.searchCoach = searchCoach;

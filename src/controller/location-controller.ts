@@ -46,6 +46,7 @@ export const createLocation = async (req: Request, res: Response) => {
             location,
         });
     } catch (error: any) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };

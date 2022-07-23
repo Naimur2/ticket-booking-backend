@@ -31,10 +31,19 @@ export interface IBus {
     seatNumber: string;
 }
 
+export interface ISeat {
+    seatNumber: string;
+    seatStatus: boolean;
+    user?: string;
+}
+
 export interface ICoach {
     _id?: string;
     startingPoint: ILocation | string;
     destination: ILocation | string;
     bus: IBus | string;
     startingTime: string;
+    price: number | string;
+    date: Date;
+    seats: ISeat[];
 }

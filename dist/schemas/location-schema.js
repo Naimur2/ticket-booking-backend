@@ -17,8 +17,6 @@ const schema = new mongoose_1.Schema({
     },
     email: {
         type: String,
-        required: false,
-        unique: true,
     },
     description: {
         type: String,

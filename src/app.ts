@@ -17,8 +17,8 @@ const { env } = process;
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static(static_path));
+app.use(express.urlencoded({ extended: true }));
 
 // STARTING OUR DATATABASE
 

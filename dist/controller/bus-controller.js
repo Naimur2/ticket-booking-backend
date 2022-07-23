@@ -16,6 +16,8 @@ exports.deleteBus = exports.updateBus = exports.getBusById = exports.getAllBuses
 const bus_schema_1 = __importDefault(require("../schemas/bus-schema"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = require("fs");
+const coaches_schema_1 = __importDefault(require("../schemas/coaches-schema"));
+const get_bus_seats_1 = require("../helpers/get-bus-seats");
 // add a bus
 const addBus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -87,7 +89,23 @@ const updateBus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             const files = req.files;
             newBusImage = "/uploads/bus-images/" + files[0].filename;
         }
-        const bus = yield bus_schema_1.default.findByIdAndUpdate(req.params.id, {
+        const busId = req.params.id;
+        const oldBus = yield bus_schema_1.default.findById(busId);
+        const oldSeatNumber = oldBus === null || oldBus === void 0 ? void 0 : oldBus.seatNumber;
+        const newSeatNumber = seatNumber;
+        if (oldSeatNumber !== newSeatNumber) {
+            const seats = (0, get_bus_seats_1.getSeats)(newSeatNumber, 4).map((seat) => {
+                return {
+                    seatNumber: seat,
+                };
+            });
+            const coachesWithSameBus = yield coaches_schema_1.default.find({ bus: busId });
+            coachesWithSameBus.forEach((coach) => {
+                coach.seats = seats;
+                coach.save();
+            });
+        }
+        const bus = yield bus_schema_1.default.findByIdAndUpdate(busId, {
             busName,
             busLiscenseNumber,
             busType,
@@ -101,6 +119,7 @@ const updateBus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 });

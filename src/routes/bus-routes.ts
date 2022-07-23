@@ -11,8 +11,8 @@ import checkLogin from "../middlewares/check-login";
 
 const route = Router();
 
-route.get("/", checkLogin, getAllBuses);
-route.get("/:id", checkLogin, getBusById);
+route.get("/", getAllBuses);
+route.get("/:id", getBusById);
 route.post("/", checkLogin, uploadBusImage, addBus);
 route.put("/:id", checkLogin, uploadBusImage, updateBus);
 route.delete("/:id", checkLogin, deleteBus);

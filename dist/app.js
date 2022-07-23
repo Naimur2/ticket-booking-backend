@@ -18,8 +18,8 @@ const { env } = process;
 app.use((0, helmet_1.default)());
 app.use((0, morgan_1.default)("dev"));
 app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.static(static_path));
+app.use(express_1.default.urlencoded({ extended: true }));
 // STARTING OUR DATATABASE
 (0, helpers_1.run)();
 app.use("/api", routes_1.default);
