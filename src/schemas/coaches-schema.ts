@@ -26,6 +26,11 @@ const CoachesSchema = new Schema<ICoach>(
         date: {
             type: Date,
         },
+        maximumSeats: {
+            type: Number,
+            required: true,
+            default: 4,
+        },
         seats: [
             {
                 seatNumber: {

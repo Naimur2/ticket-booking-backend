@@ -1,18 +1,10 @@
-export interface IUserProps {
-    firstName?: string;
-    lastName?: string;
-    email: string;
-    password: string;
-    role: "admin" | "user";
-    termsAccepted?: boolean;
-}
-
 export interface ITokenData {
     _id: string;
     email: string;
 }
 
 export interface ILocation {
+    _id?: string;
     name: string;
     address: string;
     phone: string;
@@ -46,4 +38,21 @@ export interface ICoach {
     price: number | string;
     date: Date;
     seats: ISeat[];
+    maximumSeats: number;
+}
+
+export interface IUserSeats {
+    _id?: string;
+    coach: ICoach | string;
+    seats: string[] | ISeat[];
+}
+export interface IUserProps {
+    firstName?: string;
+    lastName?: string;
+    email: string;
+    password: string;
+    role: "admin" | "user";
+    termsAccepted?: boolean;
+    tickets?: IUserSeats[];
+    phone?: string;
 }

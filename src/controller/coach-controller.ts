@@ -1,8 +1,9 @@
 import { RequestHandler } from "express";
-import { ICoach } from "../interfaces/main";
+import { ICoach, ISeat, IUserSeats, IUserProps } from "../interfaces/main";
 import Coach from "../schemas/coaches-schema";
 import { getSeats } from "../helpers/get-bus-seats";
 import Bus from "../schemas/bus-schema";
+import User from "../schemas/user-schema";
 
 // add a coach
 export const addCoach: RequestHandler = async (req, res) => {
@@ -61,7 +62,7 @@ export const getAllCoaches: RequestHandler = async (req, res) => {
 export const getCoachById: RequestHandler = async (req, res) => {
     try {
         const coach = await Coach.findById(req.params.id).populate(
-            "startingPoint destination bus"
+            "startingPoint destination bus seats.user"
         );
 
         res.status(200).json({
@@ -76,14 +77,22 @@ export const getCoachById: RequestHandler = async (req, res) => {
 // update a coach
 export const updateCoach: RequestHandler = async (req, res) => {
     try {
-        const { startingPoint, destination, bus, startingTime } =
-            req.body as ICoach;
+        const {
+            startingPoint,
+            destination,
+            bus,
+            startingTime,
+            maximumSeats,
+            date,
+        } = req.body as ICoach;
 
         const coach = await Coach.findByIdAndUpdate(req.params.id, {
             startingPoint,
             destination,
             bus,
             startingTime,
+            maximumSeats,
+            date,
         });
 
         const updatedCoach = await Coach.findById(req.params.id).populate(
@@ -135,6 +144,105 @@ export const searchCoach: RequestHandler = async (req, res) => {
             });
         }
     } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const bookTicket: RequestHandler = async (req, res) => {
+    try {
+        const { coachId, seats, userId } = req.body;
+
+        const coach = await Coach.findById(coachId);
+        const newSeats = coach?.seats as ISeat[];
+
+        seats.forEach((seat: ISeat) => {
+            newSeats.forEach((newSeat) => {
+                if (newSeat.seatNumber === seat.seatNumber) {
+                    newSeat.seatStatus = true;
+                    newSeat.user = userId;
+                }
+            });
+        });
+
+        const coachData = await Coach.findByIdAndUpdate(coachId, {
+            seats: newSeats,
+        });
+
+        res.status(200).json({
+            message: "Ticket booked successfully",
+            data: coachData,
+        });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getUserTickets: RequestHandler = async (req, res) => {
+    try {
+        const coaches = await Coach.find({
+            seats: {
+                $elemMatch: {
+                    user: req.params.userId,
+                },
+            },
+        }).populate("startingPoint destination bus");
+
+        const filteredCoach = coaches.filter((coach) => {
+            return coach.seats.some((seat) => {
+                return seat.seatStatus === true;
+            });
+        });
+
+        res.status(200).json({
+            message: "Success",
+            data: filteredCoach,
+        });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const cancelTicket: RequestHandler = async (req, res) => {
+    try {
+        const { coachId, seats, userId } = req.body;
+
+        const coach = await Coach.find({
+            _id: coachId,
+            seats: {
+                $elemMatch: {
+                    user: userId,
+                },
+            },
+        });
+
+        const newSeats = coach[0]?.seats as ISeat[];
+
+        const updatedSeats = newSeats?.map((newSeat) => {
+            if (newSeat?.user?.toString() === userId) {
+                return {
+                    seatNumber: newSeat.seatNumber,
+                    seatStatus: false,
+                };
+            }
+            return newSeat;
+        });
+
+        if (updatedSeats) {
+            const coachData = await Coach.findByIdAndUpdate(coachId, {
+                seats: updatedSeats,
+            });
+
+            res.status(200).json({
+                message: "Ticket cancelled successfully",
+                data: coachData,
+            });
+        } else {
+            res.status(404).json({
+                message: "No tickets found",
+            });
+        }
+    } catch (error: any) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };

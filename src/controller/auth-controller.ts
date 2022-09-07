@@ -110,3 +110,56 @@ export const validationController: RequestHandler = async (req, res) => {
         });
     }
 };
+
+export const getUserInfo: RequestHandler = async (req, res) => {
+    const { email } = req.body.user;
+    const user = await User.find({ email }).select({ password: 0 });
+    if (user?.length > 0) {
+        res.status(200).json({
+            message: "Validation successful.",
+            user: user[0],
+        });
+    } else {
+        res.status(401).json({
+            message: "Validation failed.",
+        });
+    }
+};
+
+export const updateUserInfo: RequestHandler = async (req, res) => {
+    const { email, password, firstName, lastName, phone } =
+        req.body as IUserProps;
+
+    const user = await User.find({ email });
+
+    if (user?.length > 0) {
+        const hashedPassword = await hash(password, 10);
+        const oldPassword = user[0].password;
+        let newPassword = oldPassword;
+
+        if (password.length > 0 && oldPassword !== hashedPassword) {
+            newPassword = hashedPassword;
+        }
+
+        await User.findByIdAndUpdate(user[0]._id, {
+            email,
+            password: newPassword,
+            firstName,
+            lastName,
+            phone,
+        });
+
+        const updatedUser = await User.findById(user[0]._id).select({
+            password: 0,
+        });
+
+        res.status(201).json({
+            message: "Data updated.",
+            user: updatedUser[0],
+        });
+    } else {
+        res.status(400).json({
+            message: "Data update failed.",
+        });
+    }
+};

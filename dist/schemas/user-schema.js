@@ -20,6 +20,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    phone: {
+        type: String,
+        required: false,
+    },
     role: {
         type: String,
         required: true,

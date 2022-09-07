@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validationController = exports.registerController = exports.loginController = void 0;
+exports.updateUserInfo = exports.getUserInfo = exports.validationController = exports.registerController = exports.loginController = void 0;
 const bcrypt_1 = require("bcrypt");
 const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = require("jsonwebtoken");
@@ -106,3 +106,51 @@ const validationController = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.validationController = validationController;
+const getUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.body.user;
+    const user = yield user_schema_1.default.find({ email }).select({ password: 0 });
+    if ((user === null || user === void 0 ? void 0 : user.length) > 0) {
+        res.status(200).json({
+            message: "Validation successful.",
+            user: user[0],
+        });
+    }
+    else {
+        res.status(401).json({
+            message: "Validation failed.",
+        });
+    }
+});
+exports.getUserInfo = getUserInfo;
+const updateUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password, firstName, lastName, phone } = req.body;
+    const user = yield user_schema_1.default.find({ email });
+    if ((user === null || user === void 0 ? void 0 : user.length) > 0) {
+        const hashedPassword = yield (0, bcrypt_1.hash)(password, 10);
+        const oldPassword = user[0].password;
+        let newPassword = oldPassword;
+        if (password.length > 0 && oldPassword !== hashedPassword) {
+            newPassword = hashedPassword;
+        }
+        yield user_schema_1.default.findByIdAndUpdate(user[0]._id, {
+            email,
+            password: newPassword,
+            firstName,
+            lastName,
+            phone,
+        });
+        const updatedUser = yield user_schema_1.default.findById(user[0]._id).select({
+            password: 0,
+        });
+        res.status(201).json({
+            message: "Data updated.",
+            user: updatedUser[0],
+        });
+    }
+    else {
+        res.status(400).json({
+            message: "Data update failed.",
+        });
+    }
+});
+exports.updateUserInfo = updateUserInfo;
